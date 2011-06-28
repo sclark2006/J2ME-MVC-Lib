@@ -1,0 +1,1 @@
+Sample Projecto of a Loan Manager Mobile App based on J2ME and using a tiny MVC framework.
