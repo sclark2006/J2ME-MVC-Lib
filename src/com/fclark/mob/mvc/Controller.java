@@ -17,12 +17,12 @@ public abstract class Controller {
     public abstract void home();
 
     protected void render(View view) {
-        renderer.next(view);
+        renderer.next(view.asDisplayable());
     }
 
     protected void render(View view, Object data) {
         view.write(data);
-        renderer.next(view);
+        renderer.next(view.asDisplayable());
     }
     //public list(String search, String searchFields, Field orderBy, int order) {
 }

@@ -23,7 +23,7 @@ public class LoanEdit extends EditView implements ItemStateListener {
     private boolean editing;
 
     public LoanEdit() {
-        this("New Person");
+        this("New Loan");
         editing = false;
     }
     public LoanEdit(String title) {

@@ -14,6 +14,7 @@ import com.fclark.mob.db.Entity;
 import com.fclark.util.Collections;
 import com.fclark.util.List;
 import com.fclark.util.TimeSpan;
+import com.fclark.util.ValidationException;
 import java.util.Date;
 
 public class Person extends Entity {
@@ -31,8 +32,7 @@ public class Person extends Entity {
         super("People");
         long millis18back =  (long)(new Date().getTime() -  (long)(TimeSpan.MILLIS_PER_YEAR * 18));
         set(BIRTHDATE, new Date(millis18back));
-        millis18back = 0;
-        setDouble(BALANCE, 0.0d);
+        setDouble(BALANCE, 0.0d);        
     }
     
     private void loadLoans() {
@@ -63,6 +63,7 @@ public class Person extends Entity {
     }
        
     public boolean create() {
+        validateAge();
         boolean created = super.create();
         if(created && loans != null && loans.size() > 0) {
             Entity.setAll(loans, Loan.PERSON_ID, this.get(ID));
@@ -72,8 +73,13 @@ public class Person extends Entity {
         
         return created;
     }
+    private void validateAge() throws ValidationException {
+        if(this.age() > 0 && this.age() < 18 )
+            throw new ValidationException("The person must be at least 18 years old");
+    }
 
     public boolean update() {
+        validateAge();
         boolean updated = super.update();
         if(loans != null && loans.size() > 0) {
             Entity.setAll(loans, Loan.PERSON_ID, this.get(ID));
@@ -96,7 +102,7 @@ public class Person extends Entity {
         return getInt(ID) + " " + get(NAME) + " " + age();
     }
 
-    // <editor-fold defaultstate="collapsed" desc=" Static Query Methods">     
+    // <editor-fold defaultstate="collapsed" desc=" Static Query Methods">
     public static int count() {
         return Entity.count(getStoreName(Person.class));
     }

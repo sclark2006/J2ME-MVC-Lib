@@ -45,6 +45,8 @@ public class Loan extends Entity {
     }
     
     public Person getPerson() {
+        if(person == null && getInt(PERSON_ID) > 0)
+            person = Person.findById(getInt(PERSON_ID));
         return person;
     }
    

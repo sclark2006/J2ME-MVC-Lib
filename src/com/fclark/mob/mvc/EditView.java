@@ -1,6 +1,8 @@
 package com.fclark.mob.mvc;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import javax.microedition.lcdui.Command;
 
 import javax.microedition.lcdui.DateField;
 import javax.microedition.lcdui.Displayable;
@@ -11,7 +13,7 @@ import javax.microedition.lcdui.StringItem;
 import javax.microedition.lcdui.TextField;
 
 
-public abstract class EditView extends Form implements View {
+public class EditView extends Form implements View {
     protected CRUDController controller;
     
     public EditView(String title) {
@@ -35,6 +37,8 @@ public abstract class EditView extends Form implements View {
                     ((TextField) this.get(i)).setString(null);
                 } else if (this.get(i) instanceof DateField) {
                     ((DateField) this.get(i)).setDate(null);
+                }else if (this.get(i) instanceof StringItem) {
+                    ((StringItem) this.get(i)).setText(null);
                 }
             }//
         } catch (Exception e) {
@@ -54,7 +58,7 @@ public abstract class EditView extends Form implements View {
         } else if (item instanceof DateField)
             ((DateField) item).setDate((Date) value);
         else if (item instanceof StringItem)
-            ((StringItem) item).setText((String) value);
+            ((StringItem) item).setText(value == null ? null : value.toString() );
         else if (item instanceof Gauge)
             ((Gauge) item).setValue(((Integer) value).intValue());
     }
@@ -89,6 +93,39 @@ public abstract class EditView extends Form implements View {
 
     public Displayable asDisplayable() {
         return this;
+    }
+
+    public void write(Object object) {
+        try {
+            if(object != null && object.getClass().isArray() && this.size() > 0) {
+                Object[] data = (Object[])object;
+                for(int i=0; i < this.size(); i++)
+                    setValue(get(i), data[i]);
+            }
+            throw new com.fclark.util.UnimplementedMethodException();
+        }
+        catch(Exception ex) {
+            throw new com.fclark.util.UnimplementedMethodException();
+        }
+    }
+
+    public Object read(Object object) {
+        try {
+            if(object != null && object.getClass().isArray() && this.size() > 0) {
+                Object[] data = (Object[])object;
+                for(int i=0; i < this.size(); i++)
+                    setValue(get(i), data[i]);
+                return data;
+            }
+            throw new com.fclark.util.UnimplementedMethodException();
+        }
+        catch(Exception ex) {
+            throw new com.fclark.util.UnimplementedMethodException();
+        }
+    }
+
+    public void commandAction(Command c, Displayable d) {
+        throw new com.fclark.util.UnimplementedMethodException();
     }
 
 }

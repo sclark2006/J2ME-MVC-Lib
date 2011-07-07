@@ -128,13 +128,13 @@ public class Collections {
         if(array == null)
             return null;
         
-        StringBuffer sb = new StringBuffer("[");
+        StringBuffer sb = new StringBuffer("{");
         for(int i=0; i < array.length; i++) {
             if(i > 0)
                 sb.append(',');
             sb.append(array[i]);
         }
-        sb.append(']');
+        sb.append("}");
         return sb.toString();
     }
 }

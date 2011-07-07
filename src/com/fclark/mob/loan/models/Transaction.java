@@ -20,7 +20,7 @@ public class Transaction extends Entity {
 
     public static final Field LOAN_ID = createField(Transaction.class, Field.INT),
             TRX_DATE = createField(Transaction.class, Field.DATE),
-            TYPE = createField(Transaction.class, Field.CHAR),            
+            TYPE = createField(Transaction.class, Field.CHAR),
             AMOUNT = createField(Transaction.class, Field.DOUBLE);
     private Loan loan;
 

@@ -7,6 +7,7 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.List;
 
 import com.fclark.mob.loan.controllers.ApplicationController;
+import com.fclark.mob.loan.controllers.PeopleController;
 import com.fclark.mob.mvc.ListView;
 
 public final class PeopleListView extends ListView {
@@ -14,6 +15,7 @@ public final class PeopleListView extends ListView {
     private Command exitCommand;
     private Command newItemCommand;
     private Command deleteCommand;
+    private Command editCommand;
     private Command sortCommand;
     private Command showBirthdaysCommand;
     private boolean isShowingBirthdays = false;
@@ -24,7 +26,7 @@ public final class PeopleListView extends ListView {
     }
     
     public PeopleListView() {
-        this("Person List", List.IMPLICIT);
+        this("People List", List.IMPLICIT);
     }
     
     public PeopleListView(Enumeration data) {
@@ -33,42 +35,22 @@ public final class PeopleListView extends ListView {
     }
 
     private void initComponents() {
-    
-        this.exitCommand = new Command("Exit", Command.EXIT, 0);
-        this.sortCommand = new Command("Sort (Age)", Command.SCREEN, 1);
-        this.newItemCommand = new Command("New", Command.SCREEN, 2);
-        this.deleteCommand = new Command("Delete", Command.ITEM, 3);
-        this.showBirthdaysCommand = new Command("Birthdays", Command.SCREEN, 3);
-
-        this.addCommand(this.exitCommand);
-        this.addCommand(this.newItemCommand);
-        this.addCommand(this.deleteCommand);
-        this.addCommand(this.sortCommand);
-        this.addCommand(this.showBirthdaysCommand);
-        this.setSelectCommand(List.SELECT_COMMAND);
-    }
-    
-    public void write(Object item) {
-        if(item != null && item instanceof Enumeration)
-        {
-            clear();
-            Enumeration elements = (Enumeration)item;
-            while(elements.hasMoreElements()) {
-                append(elements.nextElement().toString(), null);
-            }
-        }
+        this.addCommand(this.exitCommand = new Command("Exit", Command.EXIT, 0));
+        this.addCommand(this.newItemCommand = new Command("New", Command.SCREEN, 0));
+        this.addCommand(this.editCommand  = new Command("Edit", Command.ITEM, 0));
+        this.addCommand(this.deleteCommand = new Command("Delete", Command.ITEM, 1));        
+        this.addCommand(this.sortCommand  = new Command("Sort (Age)", Command.SCREEN, 1));
+        this.addCommand(this.showBirthdaysCommand = new Command("Birthdays", Command.SCREEN, 2));
+        this.setSelectCommand(editCommand);
     }
 
-    public Object read(Object item) {
-        return new Integer(this.getSelectedIndex());
-    }
     
     public void commandAction(Command command, Displayable display) {
-        if(exitCommand.equals(command))  ApplicationController.getMIDlet().notifyDestroyed();
+        if(exitCommand.equals(command))  ApplicationController.exit();
         if(newItemCommand.equals(command)) controller.blank();
+        if(editCommand.equals(command)) controller.edit();
         if(deleteCommand.equals(command)) controller.delete();
-        if(sortCommand.equals(command)) controller.list();
-        if(List.SELECT_COMMAND.equals(command)) controller.show();
+        if(sortCommand.equals(command)) ((PeopleController)controller).toggleSort();
         //if(showBirthdaysCommand.equals(command))   
     }
 

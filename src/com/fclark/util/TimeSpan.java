@@ -30,14 +30,12 @@ public class TimeSpan {
     public TimeSpan(long elapsedTime) {
         this.elapsedTime = elapsedTime;
         calculateTimeSpan();
-        System.out.println("TimeSpan: " + this.toString());
+   
     }
 
     private void calculateTimeSpan() {
         long remainingTime =  Math.abs(elapsedTime);
-        //years
-        System.out.println("Millis per Year:" + MILLIS_PER_YEAR);
-        System.out.println("Years opeartion :"+remainingTime / MILLIS_PER_YEAR);
+        //years   
         years = (int) Math.floor(remainingTime / MILLIS_PER_YEAR);
         //days
         remainingTime %= MILLIS_PER_YEAR;

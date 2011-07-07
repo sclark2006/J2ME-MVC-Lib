@@ -19,7 +19,13 @@ public class Field {
     
    
     Field(int ordinal, int type) {
-        this.ordinal = ordinal;
+        if(ordinal < 0)
+            throw new IllegalArgumentException("The ordinal number must be a positive number");
+        
+        if(getTypeName().equals("UNKNOWN"))
+            throw new IllegalArgumentException("The specified field type is not allowed");
+        
+        this.ordinal = ordinal;        
         this.type = type;
     }
 
@@ -29,5 +35,52 @@ public class Field {
     
     public int type() {
         return type;
-    }    
+    }
+    
+    public String getTypeName() {
+        String result;
+        switch(this.type) {
+        case BYTE:
+            result = "BYTE";
+            break;
+        case BOOLEAN:
+            result = "BOOLEAN";
+            break;
+        case SHORT:
+            result = "SHORT";
+            break;
+        case INT:
+            result = "INT";
+            break;
+        case CHAR:
+            result = "CHAR";
+            break;
+        case FLOAT:
+            result = "FLOAT";
+            break;
+        case LONG:
+            result = "LONG";
+            break;
+        case DOUBLE:
+            result = "DOUBLE";
+            break;
+        case STRING:
+            result = "STRING";
+            break;
+        case DATE:
+            result = "DATE";
+            break;
+        case OBJECT:
+            result = "OBJECT";
+            break;
+        default:
+            result = "UNKNOWN";
+            break;
+        }
+        
+        return result;
+    }
+    public String toString() {
+       return "Field[ordinal="+this.ordinal+", type="+getTypeName()+"]";
+    }
 }

@@ -11,11 +11,9 @@ public class LoansMIDlet extends MIDlet {
 
     private Controller appController;
 
-    /**
-     * Creates several screens and navigates between them.
-     */
-    public LoansMIDlet() {            
-        appController = ApplicationController.init(this);
+    public LoansMIDlet() {
+        
+        appController = ApplicationController.getInstance(this);
     }
     
 
@@ -27,6 +25,7 @@ public class LoansMIDlet extends MIDlet {
     }
 
     protected void pauseApp() {
+        this.notifyPaused();
     }
 
     /// 

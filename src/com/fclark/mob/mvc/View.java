@@ -1,9 +1,12 @@
 package com.fclark.mob.mvc;
 
-public interface View extends javax.microedition.lcdui.CommandListener {
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Displayable;
+
+public interface View extends CommandListener {
     void setController(Controller ctl);
-    void write(Object item);
-    Object read(Object item);
+    void write(Object object);
+    Object read(Object object);
     void clear();
-    javax.microedition.lcdui.Displayable asDisplayable();
+    Displayable asDisplayable();
 }

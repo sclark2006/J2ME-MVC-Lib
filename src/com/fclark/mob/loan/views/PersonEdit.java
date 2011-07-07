@@ -8,8 +8,10 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Item;
 import javax.microedition.lcdui.TextField;
 
+import com.fclark.mob.loan.models.Loan;
 import com.fclark.mob.loan.models.Person;
 import com.fclark.mob.mvc.EditView;
+import com.fclark.util.Collections;
 import com.fclark.util.TimeSpan;
 import java.util.Date;
 import javax.microedition.lcdui.ItemStateListener;
@@ -28,7 +30,6 @@ public class PersonEdit extends EditView implements ItemStateListener {
 
     public PersonEdit() {
         this("New Person");
-        editing = false;
     }
     public PersonEdit(String title) {
         super(title);
@@ -49,8 +50,8 @@ public class PersonEdit extends EditView implements ItemStateListener {
         this.addCommand(this.deleteCommand);
         this.addCommand(this.loansCommand);
         
-        this.append(new TextField("Name: *", null, 15, TextField.ANY + TextField.INITIAL_CAPS_WORD));
-        this.append(new TextField("Address:", null, 20, TextField.ANY));
+        this.append(new TextField("Name: *", null, 30, TextField.ANY + TextField.INITIAL_CAPS_WORD));
+        this.append(new TextField("Address:", null, 50, TextField.ANY));
         this.append(new TextField("Phone:", null, 15, TextField.PHONENUMBER));
         this.append(new TextField("e-mail:", null, 30, TextField.EMAILADDR));
         this.append(new DateField("Birthdate: *", DateField.DATE));
@@ -60,7 +61,7 @@ public class PersonEdit extends EditView implements ItemStateListener {
     }
 
     public void write(Object item) {
-        if(item != null) { 
+        if(item != null) {
             Person person = (Person)item;
             editing = person.getRecordId() > 0 ? true : false;
             setValue(get(0), person.getString(Person.NAME));
@@ -70,7 +71,8 @@ public class PersonEdit extends EditView implements ItemStateListener {
             setValue(get(4), person.getDate(Person.BIRTHDATE));
             setValue(get(5), new Integer(person.age()));
             setValue(get(6), person.get(Person.BALANCE));
-            this.setTitle(person.getString(Person.NAME) + " data");
+            if(editing)
+                this.setTitle(person.getString(Person.NAME) + " detail");
         }
     }
     
@@ -99,16 +101,20 @@ public class PersonEdit extends EditView implements ItemStateListener {
                 controller.create();
         if(newItemCommand.equals(command)) controller.blank();
         if(deleteCommand.equals(command)) controller.delete();
-        if(loansCommand.equals(command)) ((PeopleController)controller).loans().list(null, null, null, order);
+        //Load all the loans attached to this person
+        if(loansCommand.equals(command))
+            ((PeopleController)controller).loans().list(Loan.PERSON_ID, controller.getCurrentItem().get(Person.ID), 
+                    Loan.ID, Collections.ORDER_ASCENDING);
     }
-
-    public void itemStateChanged(Item item) {        
+    
+    public void itemStateChanged(Item item) {
         //If is the BirthDate field
         if(item.equals(get(4))) {
-            TimeSpan age = TimeSpan.between(new Date(), ((DateField)item).getDate());            
+            TimeSpan age = TimeSpan.between(new Date(), ((DateField)item).getDate());
             if(age != null)
-                ((TextField)get(5)).setString(String.valueOf(age.getYears()));
+                setValue(get(5), new Integer(age.getYears()));                
             
         }
     }
+
 }
