@@ -30,13 +30,13 @@ public class Loan extends Entity {
     private List transactions;
     
     public Loan() {
-        setStoreName("Loans");
+        super("Loans");
         person = null;
         transactions = null;
     }
     
     public Loan(Person person) {
-        setStoreName("Loans");
+        super("Loans");
         this.setPerson(person);
     }
     

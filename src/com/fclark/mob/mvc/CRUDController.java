@@ -37,6 +37,7 @@ public abstract class CRUDController extends Controller {
     }
     
     public Entity getCurrentItem() {
+        currentItem = (Entity) getListView().read(items);
         return currentItem;
     }
     
@@ -75,7 +76,7 @@ public abstract class CRUDController extends Controller {
         try {
             if (currentItem.create()) {
                 Messages.display(Messages.MSG_SUCESSFULLY_CREATED);
-                list();
+                back();
             } else {
                 Messages.popup(Messages.MSG_NOT_SAVED);
             }
@@ -86,7 +87,7 @@ public abstract class CRUDController extends Controller {
         
     }
     
-    public void save() {        
+    public void save() {
         currentItem = (Entity) getEditView().read(currentItem);
         try {
         if (currentItem.update()) {
@@ -126,7 +127,8 @@ public abstract class CRUDController extends Controller {
             
             if (currentItem.delete()) {
                 Messages.popup(Messages.MSG_RECORD_DELETED);
-                list();
+                refreshList();
+                //list();
             } else {
                 Messages.popup(Messages.MSG_RECORD_NO_DELETED);
                 back();
@@ -172,6 +174,17 @@ public abstract class CRUDController extends Controller {
         }
     }
     
+    public void refreshList() {
+        refreshList(Collections.ORDER_ASCENDING);
+    }
+    
+    public void refreshList(int order) {
+        items = Entity.findAll(entityClass, Entity.ID, order);
+        if (items.size() > 0) {
+            currentItem = (Entity) items.firstElement();
+        }
+    }
+    
     public void list() {
         list(Collections.ORDER_ASCENDING);
     }
@@ -195,7 +208,7 @@ public abstract class CRUDController extends Controller {
     public void back() {
         this.getDisplayManager().back();
         if (this.getListView().isShown()) {
-            list();
+            refreshList();
         }
     }
 }

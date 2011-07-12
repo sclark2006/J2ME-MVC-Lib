@@ -25,10 +25,14 @@ public class Transaction extends Entity {
     private Loan loan;
 
     public Transaction() {
-        setStoreName("Transactions");
+        super("Transactions");
         loan = null;
     }
-
+    public Transaction(Loan loan) {
+        super("Transactions");
+        this.setLoan(loan);
+    }
+    
     public Loan getLoan() {
         return loan;
     }
